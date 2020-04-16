@@ -1,0 +1,14 @@
+POST http://localhost:8080/messages/1
+Content-Type: application/json
+
+{
+  "dialogId" : "1",
+  "text" : "Bye!"
+}
+
+###
+
+GET http://localhost:8080/messages/1
+Content-Type: application/json
+
+###

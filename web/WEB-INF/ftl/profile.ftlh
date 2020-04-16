@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, appUser-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Organisations</title>
+</head>
+<body>
+    <h1>${user.id}</h1>
+    <h1>${user.login}</h1>
+    <h1>${user.email}</h1>
+
+
+    <a href="/messages">Мои сообщения</a>
+
+    <a href="/confirm/moder?id=${user.id}">Зарегистрировать свою организацию</a>
+
+    <form method="post" action="/messages">
+        <input type="text" name="id">
+<#--        <input hidden="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">-->
+        <input type="submit" value="create dialog">
+    </form>
+</body>
+</html>
