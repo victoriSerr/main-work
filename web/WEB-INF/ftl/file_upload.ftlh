@@ -23,10 +23,10 @@
             // данные для отправки
             let formData = new FormData();
             // забрал файл из input
-            let files = ($('#file'))[0]['files'];
+            let files = ($('#fileInfo'))[0]['files'];
             // добавляю файл в formData
-            [].forEach.call(files, function (file, i, files) {
-                formData.append("file", file);
+            [].forEach.call(files, function (fileInfo, i, files) {
+                formData.append("file", fileInfo);
             });
             // var token = $("meta[name='_csrf']").attr("content");
             // var header = $("meta[name='_csrf_header']").attr("content");
@@ -51,7 +51,8 @@
 </head>
 <body>
 <div class="container-fluid">
-    <input type="file" id="file" name="file" placeholder="Имя файла..."/>
+    <input type="fileInfo" id="fileInfo" name="fileInfo" placeholder="Имя файла..."/>
+
     <button onclick="sendFile()">
         Загрузить файл
     </button>

@@ -4,6 +4,8 @@ package ru.itis.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table
-public class Animal {
+public class Animal implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +23,16 @@ public class Animal {
     private String name;
     private String description;
 
+
+    @Enumerated(EnumType.STRING)
+    private AnimalStatus status;
+
     @ManyToOne
     @JoinColumn(name = "organisation_id")
     private Organisation organisation;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "animalA")
+    private List<FileInfo> files;
 
     @Override
     public String toString() {

@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.sql.Date;
 @Builder
 @Entity
 @Table
-public class Message {
+public class Message implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

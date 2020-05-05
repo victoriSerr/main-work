@@ -21,21 +21,17 @@ public class OrganisationRepositoryJpa implements OrganisationRepository {
     @Override
     @Transactional
     public Optional<Organisation> findOne(Long aLong) {
-        Query query = entityManager.createNativeQuery("select * from organisation where id = ?1", Organisation.class)
-                .setParameter(1, aLong);
-
-        TypedQuery<Organisation> query1 = entityManager.createQuery("select o from Organisation o where o.id = :id", Organisation.class);
-        query1.setParameter("id", aLong);
-        Organisation o = query1.getSingleResult();
-
         Organisation o1 = entityManager.find(Organisation.class, aLong);
         return Optional.of(o1);
     }
 
     @Override
     public List<Organisation> findAll() {
-        Query query = entityManager.createNativeQuery("select * from organisation", Organisation.class);
-        return query.getResultList();
+//        Query query = entityManager.createNativeQuery("select * from organisation", Organisation.class);
+        TypedQuery<Organisation> query1
+                = entityManager.createQuery("select o from Organisation o", Organisation.class);
+
+        return query1.getResultList();
     }
 
     @Override

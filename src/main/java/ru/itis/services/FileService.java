@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import ru.itis.models.File;
+import ru.itis.models.FileInfo;
 import ru.itis.repositories.FileRepository;
 
 import java.io.IOException;
@@ -24,11 +24,11 @@ public class FileService {
     private String storagePath;
 
 
-    public void save(File file) {
-        fileRepository.save(file);
+    public void save(FileInfo fileInfo) {
+        fileRepository.save(fileInfo);
     }
 
-    public File findFile(String name) {
+    public FileInfo findFile(String name) {
         return fileRepository.findFile(name).get();
     }
 

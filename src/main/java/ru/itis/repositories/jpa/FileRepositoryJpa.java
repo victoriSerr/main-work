@@ -2,8 +2,7 @@ package ru.itis.repositories.jpa;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.models.AppUser;
-import ru.itis.models.File;
+import ru.itis.models.FileInfo;
 import ru.itis.repositories.FileRepository;
 
 import javax.persistence.EntityManager;
@@ -19,30 +18,30 @@ public class FileRepositoryJpa implements FileRepository {
     private EntityManager entityManager;
 
     @Override
-    public Optional<File> findFile(String nameInStorage) {
-        Query query = entityManager.createNativeQuery("select * from file where nameinstorage = ?1", File.class).setParameter(1, nameInStorage);
-        File file = (File) query.getSingleResult();
-        return Optional.ofNullable(file);
+    public Optional<FileInfo> findFile(String nameInStorage) {
+        Query query = entityManager.createNativeQuery("select * from file where nameinstorage = ?1", FileInfo.class).setParameter(1, nameInStorage);
+        FileInfo fileInfo = (FileInfo) query.getSingleResult();
+        return Optional.ofNullable(fileInfo);
     }
 
     @Override
-    public Optional<File> findOne(Long aLong) {
+    public Optional<FileInfo> findOne(Long aLong) {
         return Optional.empty();
     }
 
     @Override
-    public List<File> findAll() {
+    public List<FileInfo> findAll() {
         return null;
     }
 
     @Override
     @Transactional
-    public void save(File entity) {
+    public void save(FileInfo entity) {
         entityManager.persist(entity);
     }
 
     @Override
-    public void update(File entity) {
+    public void update(FileInfo entity) {
 
     }
 }

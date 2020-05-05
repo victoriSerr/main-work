@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul th:each="o : ${organisations}">
+    <li>
+        <a th:href="@{/organisations/{id}(id=${o.id})}">
+            <h1>ID - [[${o.id}]]</h1>
+            <h1>Name - [[${o.name}]]</h1>
+            <h1>Moderator -[[${o.moderator.login}]]</h1>
+        </a>
+    </li>
+</ul>
+</body>
+
+</html>

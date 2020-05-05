@@ -7,6 +7,5 @@
 
     <context:component-scan base-package="ru.itis"/>
     <mvc:annotation-driven/>
-
-<!--        <bean id="/registration" class="ru.itis.controllers.SignUpController"/>-->
+    <context:annotation-config/>
 </beans>

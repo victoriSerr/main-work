@@ -4,6 +4,7 @@ package ru.itis.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table
-public class Organisation {
+public class Organisation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +34,9 @@ public class Organisation {
     @JoinColumn(name = "moderator_id")
     private AppUser moderator;
 
+    @OneToMany(mappedBy = "organisation")
+    private List<Post> posts;
+
     @Override
     public String toString() {
         return "Organisation{" +
@@ -40,9 +44,7 @@ public class Organisation {
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
-                ", description='" + description + '\'' +
                 ", animals=" + animals +
-                ", moderator=" + moderator +
                 '}';
     }
 }

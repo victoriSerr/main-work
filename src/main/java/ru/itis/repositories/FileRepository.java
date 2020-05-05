@@ -1,11 +1,11 @@
 package ru.itis.repositories;
 
-import ru.itis.models.File;
+import ru.itis.models.FileInfo;
 
 import java.util.Optional;
 
-public interface FileRepository extends CrudDao<File, Long> {
+public interface FileRepository extends CrudDao<FileInfo, Long> {
 
-    Optional<File> findFile(String name);
+    Optional<FileInfo> findFile(String name);
 
 }

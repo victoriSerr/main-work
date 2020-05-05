@@ -7,10 +7,11 @@
     <title>Organisations</title>
 </head>
 <body>
-<#list organisations as o>
-    <h1>ID - ${o.id}</h1>
-    <h1>Name - ${o.name}</h1>
-    <h1>Moderator - ${o.moderator.login}</h1>
+    <a href="/organisations/${o.id}">
+        <h1>ID - ${o.id}</h1>
+        <h1>Name - ${o.name}</h1>
+        <h1>Moderator - ${o.moderator.login}</h1>
+    </a>
 
 </#list>
 </body>

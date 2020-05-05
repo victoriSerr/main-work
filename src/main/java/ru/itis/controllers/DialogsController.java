@@ -33,13 +33,13 @@ public class DialogsController {
     private MessageService messageService;
 
     @GetMapping(value = "/messages")
-    public ModelAndView getMessages() {
+    public ModelAndView getMessages(@RequestParam("receiverId") Long id) {
 
+        System.out.println(id);
         ModelAndView modelAndView = new ModelAndView();
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AppUser user = userService.findUserByLogin(auth.getName());
-
 //        user.getDialogs().addAll(user.getDialogs1());
 
         Collection<Dialog> dialogs = user.getDialogs();

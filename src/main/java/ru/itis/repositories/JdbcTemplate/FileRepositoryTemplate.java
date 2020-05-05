@@ -1,13 +1,11 @@
 package ru.itis.repositories.JdbcTemplate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
-import ru.itis.models.File;
+import ru.itis.models.FileInfo;
 import ru.itis.repositories.FileRepository;
 
 import java.sql.PreparedStatement;
@@ -24,8 +22,8 @@ public class FileRepositoryTemplate implements FileRepository {
 //    @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private RowMapper<File> fileRowMapper = (row, rowNumber) ->
-            File.builder()
+    private RowMapper<FileInfo> fileRowMapper = (row, rowNumber) ->
+            FileInfo.builder()
                     .id(row.getLong("id"))
                     .realName(row.getString("real_filename"))
                     .nameInStorage(row.getString("filename_in_storage"))
@@ -35,27 +33,27 @@ public class FileRepositoryTemplate implements FileRepository {
                     .build();
 
     @Override
-    public Optional<File> findFile(String name) {
+    public Optional<FileInfo> findFile(String name) {
         try {
-            File file = jdbcTemplate.queryForObject(SQL_FIND_BY_NAME,  new Object[]{name}, fileRowMapper);
-            return Optional.of(file);
+            FileInfo fileInfo = jdbcTemplate.queryForObject(SQL_FIND_BY_NAME,  new Object[]{name}, fileRowMapper);
+            return Optional.of(fileInfo);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public Optional<File> findOne(Long s) {
+    public Optional<FileInfo> findOne(Long s) {
         return Optional.empty();
     }
 
     @Override
-    public List<File> findAll() {
+    public List<FileInfo> findAll() {
         return null;
     }
 
     @Override
-    public void save(File entity) {
+    public void save(FileInfo entity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(SQL_SAVE_FILE);
@@ -71,7 +69,7 @@ public class FileRepositoryTemplate implements FileRepository {
     }
 
     @Override
-    public void update(File entity) {
+    public void update(FileInfo entity) {
 
     }
 }

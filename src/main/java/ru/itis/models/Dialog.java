@@ -4,6 +4,7 @@ package ru.itis.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,7 +14,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table
-public class Dialog {
+public class Dialog implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

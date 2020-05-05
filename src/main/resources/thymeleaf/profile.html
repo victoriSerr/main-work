@@ -1,0 +1,25 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, appUser-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Organisations</title>
+</head>
+<body>
+<h1 th:text="${user.id}"></h1>
+<h1 th:text="${user.login}"></h1>
+<h1 th:text="${user.email}"></h1>
+
+
+<a th:href="@{/messages}">Мои сообщения</a>
+
+<a th:href="@{/confirm/moder(id=${user.id})}">Зарегистрировать свою организацию</a>
+
+<form method="post" action="/messages">
+    <input type="text" name="id">
+<!--    <#&#45;&#45;        <input hidden="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">&ndash;&gt;-->
+    <input type="submit" value="create dialog">
+</form>
+</body>
+</html>

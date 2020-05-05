@@ -2,10 +2,7 @@ package ru.itis.controllers;
 
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.springframework.aop.MethodBeforeAdvice;
-import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,21 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import ru.itis.models.File;
-import ru.itis.models.Mail;
+import ru.itis.models.FileInfo;
 import ru.itis.services.FileService;
-import ru.itis.services.MailService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class FileController {
@@ -52,21 +39,22 @@ public class FileController {
     }
 
     @RequestMapping(value = "/files", method = RequestMethod.POST)
-    public ModelAndView uploadFile(@RequestParam("file") MultipartFile multipartFile) {
+    public ModelAndView uploadFile(@RequestParam("file") MultipartFile multipartFile
+//                                   @RequestParam("name") String name
+    ) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("file_upload");
-
+//        modelAndView.setViewName("file_upload");
 
         String newFilename = fileService.createStorageName(multipartFile.getOriginalFilename());
 
-        File file = File.builder().realName(multipartFile.getOriginalFilename())
+        FileInfo fileInfo = FileInfo.builder().realName(multipartFile.getOriginalFilename())
                 .size(multipartFile.getSize())
                 .suffix(multipartFile.getContentType())
                 .nameInStorage(newFilename)
                 .storageUrl(fileService.getUrlOfFile(newFilename))
                 .build();
 
-        fileService.save(file);
+        fileService.save(fileInfo);
         fileService.copyToStorage(multipartFile, newFilename);
         return modelAndView;
     }
@@ -77,10 +65,10 @@ public class FileController {
     @RequestMapping(value = "/files/{file-name:.+}", method = RequestMethod.GET)
     public ModelAndView getFile(@PathVariable("file-name") String fileName, HttpServletResponse response) {
 
-        File file = fileService.findFile(fileName);
+        FileInfo fileInfo = fileService.findFile(fileName);
 
-        java.io.File fil = new java.io.File(file.getStorageUrl());
-        response.setContentType(file.getSuffix());
+        java.io.File fil = new java.io.File(fileInfo.getStorageUrl());
+        response.setContentType(fileInfo.getSuffix());
         FileInputStream fileInputStream = new FileInputStream(fil);
         IOUtils.copy(fileInputStream, response.getOutputStream());
 

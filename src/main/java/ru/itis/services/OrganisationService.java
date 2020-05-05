@@ -8,4 +8,5 @@ import java.util.List;
 public interface OrganisationService {
    List<Organisation> findAll();
    void save(OrganisationDto organisationDto);
+   Organisation find(Long id);
 }

@@ -8,7 +8,6 @@
         <servlet-name>dispatcherServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <multipart-config>
-            <location>/tmp</location>
             <max-file-size>20848820</max-file-size>
             <max-request-size>418018841</max-request-size>
             <file-size-threshold>1048576</file-size-threshold>
@@ -17,7 +16,7 @@
 
     <servlet-mapping>
         <servlet-name>dispatcherServlet</servlet-name>
-        <url-pattern>/* </url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
     <filter> <!-- Сам фильтр -->
@@ -28,4 +27,15 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+<!--    <filter>-->
+<!--        <filter-name>springSessionRepositoryFilter</filter-name>-->
+<!--        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>springSessionRepositoryFilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--        <dispatcher>REQUEST</dispatcher>-->
+<!--        <dispatcher>ERROR</dispatcher>-->
+<!--    </filter-mapping>-->
 </web-app>
