@@ -1,14 +1,20 @@
 package ru.itis.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import freemarker.cache.ClassTemplateLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,12 +25,12 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.session.jdbc.JdbcOperationsSessionRepository;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
+import org.springframework.session.web.context.AbstractHttpSessionApplicationInitializer;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -33,25 +39,22 @@ import org.thymeleaf.templatemode.TemplateMode;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
-import java.util.UUID;
 
 @Configuration
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages = "ru.itis")
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-@EnableJdbcHttpSession
-public class AppConfiguration {
+//@EnableJdbcHttpSession
+public class RootConfig {
 
-
-    private ApplicationContext applicationContext;
 
     @Autowired
     private Environment environment;
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(hikariDataSource());
+        return new JdbcTemplate(dataSource());
     }
 
     @Bean
@@ -65,33 +68,14 @@ public class AppConfiguration {
     }
 
 
-    @Bean
-    public FreeMarkerConfigurer freemarkerConfig() {
-        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-        ClassTemplateLoader baseMvcTplLoader = new ClassTemplateLoader(FreeMarkerConfigurer.class, "");
 
-        freeMarkerConfigurer.setTemplateLoaderPath("/WEB-INF/ftl/");
-        freeMarkerConfigurer.setDefaultEncoding("UTF-8");
-        freeMarkerConfigurer.setPostTemplateLoaders(baseMvcTplLoader);
-        return freeMarkerConfigurer;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public ViewResolver viewResolver() {
-//        FreeMarkerViewResolver viewResolver = new FreeMarkerViewResolver();
-//        viewResolver.setExposeSpringMacroHelpers(true);
-//        viewResolver.setExposeRequestAttributes(true);
-//        viewResolver.setCache(true);
-//        viewResolver.setPrefix("");
-//        viewResolver.setSuffix(".ftlh");
-//        viewResolver.setContentType("text/html;charset=UTF-8");
-//        return viewResolver;
-//    }
+
 
     @Bean
     public String username() {
@@ -109,7 +93,9 @@ public class AppConfiguration {
     }
 
     @Bean
-    public String rememberMeKey(){return UUID.randomUUID().toString(); }
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 
     @Bean
     public Properties props() {
@@ -141,19 +127,13 @@ public class AppConfiguration {
     }
 
     @Bean
-    public DataSource hikariDataSource() {
+    public DataSource dataSource() {
         DataSource dataSource = new HikariDataSource(hikariConfig());
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
         resourceDatabasePopulator.addScript(new ClassPathResource("schema.sql"));
         DatabasePopulatorUtils.execute(resourceDatabasePopulator, dataSource);
-//        EmbeddedDatabaseBuilder builder =
-        return new HikariDataSource(hikariConfig());
+        return dataSource;
     }
-
-//    @Bean
-//    public EmbeddedDatabase dataSource() {
-//        return new EmbeddedDatabaseBuilder().addScript("org/springframework/session/jdbc/schema-h2.sql").build();
-//    }
 
     // штука, которая позволяет создавать бины EntityManager
     @Bean
@@ -163,7 +143,7 @@ public class AppConfiguration {
         hibernateJpaVendorAdapter.setDatabase(Database.POSTGRESQL);
         // создали фабрику EntityManager как Spring-бин
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactory.setDataSource(hikariDataSource());
+        entityManagerFactory.setDataSource(dataSource());
         entityManagerFactory.setPackagesToScan("ru.itis");
         entityManagerFactory.setJpaVendorAdapter(hibernateJpaVendorAdapter);
         entityManagerFactory.setJpaProperties(additionalProperties());
@@ -177,46 +157,18 @@ public class AppConfiguration {
         return transactionManager;
     }
 
+
     private Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL95Dialect");
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("datasource.initialization-mode", "always");
-        properties.setProperty("session.store-type", "jdbc");
         return properties;
     }
 
-    @Bean
-    public SpringResourceTemplateResolver templateResolver(){
-        // SpringResourceTemplateResolver automatically integrates with Spring's own
-        // resource resolution infrastructure, which is highly recommended.
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setApplicationContext(this.applicationContext);
-        templateResolver.setPrefix("classpath:/thymeleaf/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setCharacterEncoding("UTF-8");
-        // HTML is the default value, added here for the sake of clarity.
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        // Template cache is true by default. Set to false if you want
-        // templates to be automatically updated when modified.
-        templateResolver.setCacheable(true);
-        return templateResolver;
-    }
 
-    @Bean
-    public SpringTemplateEngine templateEngine(){
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.setEnableSpringELCompiler(true);
-        return templateEngine;
-    }
 
-    @Bean
-    public ThymeleafViewResolver viewResolver(){
-        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-        viewResolver.setContentType("text/html;charset=UTF-8");
-        viewResolver.setTemplateEngine(templateEngine());
-        return viewResolver;
-    }
+
+
 }

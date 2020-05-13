@@ -2,9 +2,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>Organisations</title>
 </head>
 <body>
+<header>
+    <div class="wrapper">
+        <a href="#"><img src="img/logo.png" class="logo" alt="" titl=""/></a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/organisations}" th:text="#{header.organisations}"></a></li>
+                <li><a th:href="@{/animals}" th:text="#{header.animals}"></a></li>
+                <li><a href="#" th:text="#{header.information}"></a></li>
+            </ul>
+            <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
+            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
+            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+        </nav>
+    </div>
+</header>
 <ul th:each="o : ${organisations}">
     <li>
         <a th:href="@{/organisations/{id}(id=${o.id})}">

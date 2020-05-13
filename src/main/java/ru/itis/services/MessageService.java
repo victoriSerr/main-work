@@ -7,5 +7,6 @@ import ru.itis.models.Message;
 public interface MessageService {
     void save(MessageDto message);
     void save(Dialog dialog);
-    Dialog find(Long id);
+    Dialog findOne(Long dialogId);
+    Dialog find(Long idFrom, Long idTo);
 }

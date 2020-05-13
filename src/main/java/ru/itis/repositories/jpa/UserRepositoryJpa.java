@@ -31,7 +31,6 @@ public class UserRepositoryJpa implements ru.itis.repositories.UserRepository {
 //        System.out.println(query);
         query.setParameter("login", login);
         AppUser user = query.getSingleResult();
-        System.out.println(user);
         user.setDialogs(dialogsRepository.find(user.getId()));
         return Optional.ofNullable(user);
     }

@@ -1,23 +1,93 @@
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>add</title>
+    <title>Add Organisation</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
+<style>
+    .error{
+        color: red;
+    }
+</style>
 <body>
+<header>
+    <div class="wrapper">
+        <a href="#"><img src="img/logo.png" class="logo" alt="" titl=""/></a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/organisations}" th:text="#{header.organisations}"></a></li>
+                <li><a th:href="@{/animals}" th:text="#{header.animals}"></a></li>
+                <li><a href="#" th:text="#{header.information}"></a></li>
+            </ul>
+            <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
+            <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
+<!--            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>-->
+<!--            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>-->
+        </nav>
+    </div>
+</header>
 
-<form method="post" action="/organisations/add">
-    <input type="text" name="name" value="name">
 
-    <input type="tel" name="phone" value="phone number">
+<div class="container-login100" th:style="'background-image: url(/images/dog1.jpg);'">
+    <div class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
+        <!--        <form class="login100-form validate-form" action="/animals/add" method="post" enctype="multipart/form-data">-->
+        <span class="login100-form-title p-b-37">
+					Добавить организацию
+				</span>
 
-    <input type="text" name="addr" value="address">
+        <form th:action="@{/organisations/add}" method="post" th:object="${form}">
+            <div class="wrap-input100 validate-input m-b-20">
+<!--                <input class="input100" type="text" name="name" id="name" placeholder="Название организации">-->
+                <input class="input100" type="text" th:field="*{name}" placeholder="Название организации">
+                <span class="focus-input100"></span>
+            </div>
+            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
-    <textarea name="description"></textarea>
-    <input hidden="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-    <br>
-    <input type="submit" value="save">
-</form>
+            <div class="wrap-input100 validate-input m-b-20">
+<!--                <input class="input100" type="text" name="phoneNumber" id="phoneNumber" placeholder="Номер телефона">-->
+                <input class="input100" type="text" th:field="*{phoneNumber}" placeholder="Номер телефона">
+                <span class="focus-input100"></span>
+            </div>
+            <span class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
+            <div class="wrap-input100 validate-input m-b-20">
+<!--                <input class="input100" type="text" name="address" id="address" placeholder="Адрес">-->
+                <input class="input100" type="text" th:field="*{address}" placeholder="Адрес">
+                <span class="focus-input100"></span>
+            </div>
+            <span class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
 
-<div></div>
+            <div class="wrap-input100 validate-input m-b-25">
+                <textarea class="input100" type="text" name="description" id="description" placeholder="Описание"></textarea>
+                <span class="focus-input100"></span>
+            </div>
+
+            <input hidden="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <div class="container-login100-form-btn">
+                <input type="submit" class="login100-form-btn" placeholder="send">
+            </div>
+
+        </form>
+
+        <div class="text-center">
+            <a href="#" class="txt2 hov1">
+                Назад
+            </a>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div id="dropDownSelect1"></div>
 
 </body>
 </html>

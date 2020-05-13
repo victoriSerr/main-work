@@ -6,6 +6,7 @@ import ru.itis.models.Dialog;
 import ru.itis.repositories.DialogsRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -43,6 +44,23 @@ public class DialogsRepositoryJpa implements DialogsRepository {
     public List<Dialog> find(Long id) {
         TypedQuery<Dialog> query = entityManager.createQuery("select d from Dialog d where d.userFrom.id = :id or d.userTo.id = :id", Dialog.class);
         query.setParameter("id", id);
+        System.out.println(query.getResultList());
         return query.getResultList();
+    }
+
+    @Override
+    public Optional<Dialog> find(Long idFrom, Long idTo) {
+        TypedQuery<Dialog> query = entityManager.createQuery("select d from Dialog d where (d.userFrom.id = :idFrom and d.userTo.id = :idTo) " +
+                "or (d.userFrom.id = :idTo and d.userTo.id = :idFrom)", Dialog.class);
+        query.setParameter("idFrom", idFrom);
+        query.setParameter("idTo", idTo);
+        Dialog dialog;
+        try {
+            dialog = query.getSingleResult();
+            return Optional.of(dialog);
+        } catch (NoResultException e) {
+
+            return Optional.empty();
+        }
     }
 }

@@ -12,29 +12,28 @@
 
     <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
-</head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script></head>
 <body>
 <header>
     <div class="wrapper">
         <a href="#"><img src="img/logo.png" class="logo" alt="" titl=""/></a>
-        <a href="#" class="hamburger"></a>
         <nav>
             <ul>
-                <li><a href="#">Buy</a></li>
-                <li><a href="#">Rent</a></li>
-                <li><a href="#">Sell</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a th:href="@{/organisations}" th:text="#{header.organisations}"></a></li>
+                <li><a th:href="@{/animals}" th:text="#{header.animals}"></a></li>
+                <li><a href="#" th:text="#{header.information}"></a></li>
             </ul>
-            <a href="#" class="login_btn">Login</a>
+            <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
+            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
+            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
         </nav>
     </div>
 </header>
 
 <section class="listings">
     <div class="wrapper">
-        <ul class="properties_list" th:each="animal : ${animals}">
-            <li>
+        <ul class="properties_list" >
+            <li th:each="animal : ${animals}">
                 <a href="#">
                     <img  th:attr="src=@{/images/{name}(name=${animal.files.get(0).nameInStorage})}" alt="" title="" class="property_img"/>
                 </a>

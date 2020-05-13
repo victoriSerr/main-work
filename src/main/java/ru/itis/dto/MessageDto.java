@@ -16,10 +16,5 @@ public class MessageDto {
     private String dialogId;
     private String text;
 
-//    public static MessageDto from(Message message) {
-//        return MessageDto.builder()
-//                .dialogId(message.getDialog().getId())
-//                .text(message.getText())
-//                .build();
-//    }
+    private String login;
 }

@@ -53,8 +53,8 @@ public class AppUser implements Serializable {
                 ", link='" + link + '\'' +
                 ", isConfirmed=" + isConfirmed +
                 ", role=" + role +
-                ", organisation=" + organisation +
-                ", dialogs=" + dialogs +
+//                ", organisation=" + organisation.size() +
+//                ", dialogs=" + dialogs.size() +
 //                ", dialogs1=" + dialogs1 +
                 '}';
     }

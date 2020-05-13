@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itis.dto.PostDto;
 import ru.itis.models.Post;
@@ -20,6 +21,7 @@ public class PostController {
 
     @PostMapping("/new-post")
     public ResponseEntity<Object> savePost(@RequestBody PostDto post) {
+        System.out.println(post);
         postService.save(post);
         return ResponseEntity.ok().build();
     }

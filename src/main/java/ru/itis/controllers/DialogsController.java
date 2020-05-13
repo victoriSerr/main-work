@@ -1,6 +1,5 @@
 package ru.itis.controllers;
 
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,11 +16,9 @@ import ru.itis.models.Message;
 import ru.itis.services.MessageService;
 import ru.itis.services.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class DialogsController {
@@ -33,53 +30,52 @@ public class DialogsController {
     private MessageService messageService;
 
     @GetMapping(value = "/messages")
-    public ModelAndView getMessages(@RequestParam("receiverId") Long id) {
+    public ModelAndView getMessages() {
 
-        System.out.println(id);
+//        System.out.println(id);
         ModelAndView modelAndView = new ModelAndView();
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AppUser user = userService.findUserByLogin(auth.getName());
-//        user.getDialogs().addAll(user.getDialogs1());
 
-        Collection<Dialog> dialogs = user.getDialogs();
+//        System.out.println(user.getDialogs());
+        List<Dialog> dialogs = user.getDialogs();
 
         System.out.println(dialogs);
 
-//        System.out.println(user.getId());
-//        userService.findMessages(user);
-//
-//        Set<String> dialogs = user.getMessages().keySet();
-//
         modelAndView.setViewName("dialogs");
-        modelAndView.addObject("messages", dialogs);
+        modelAndView.addObject("dialogs", dialogs);
 
         return modelAndView;
     }
 
-    @GetMapping(value = "/chat/{dialog-id:.+}")
+    @GetMapping(value = "/messages/{dialog-id:.+}")
     public ModelAndView getChatPage(@PathVariable("dialog-id") Long dialogId) {
+        System.out.println("sssssssssssssssssss");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView modelAndView = new ModelAndView();
 
-        Dialog dialog = messageService.find(dialogId);
+        Dialog dialog = messageService.findOne(dialogId);
         List<MessageDto> messages = new ArrayList<>();
 
         for (Message m : dialog.getMessages()) {
             MessageDto messageDto = MessageDto.builder()
                     .dialogId(m.getDialog().getId().toString())
                     .text(m.getText())
+                    .login(m.getFromLogin())
                     .build();
             messages.add(messageDto);
         }
-        modelAndView.addObject("messages", messages);
+        modelAndView.addObject("ims", messages);
 
         modelAndView.addObject("dialogId", dialogId);
+        modelAndView.addObject("login", auth.getName());
         modelAndView.setViewName("chat");
         return modelAndView;
     }
 
-    @PostMapping(value = "/messages")
-    public String createDialog(@RequestParam Long id) {
+    @GetMapping(value = "/im")
+    public String createDialog(@RequestParam("receiverId") Long id) {
 
         System.out.println(id);
         AppUser userTo = userService.findUser(id);
@@ -87,14 +83,19 @@ public class DialogsController {
         System.out.println(userTo);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AppUser userFrom = userService.findUserByLogin(auth.getName());
-        Dialog dialog = Dialog.builder()
-                .userFrom(userFrom)
-                .userTo(userTo)
-                .build();
+        if(userTo.getId().equals(userFrom.getId())) {
+            return "redirect:/profile";
+        }
+        Dialog dialog = messageService.find(userFrom.getId(), userTo.getId());
+        if (dialog == null) {
+            dialog = Dialog.builder()
+                    .userFrom(userFrom)
+                    .userTo(userTo)
+                    .build();
+            messageService.save(dialog);
+        }
 
-        messageService.save(dialog);
-
-        return "redirect:/chat/" + dialog.getId();
+        return "redirect:/messages/" + dialog.getId();
     }
 
 }

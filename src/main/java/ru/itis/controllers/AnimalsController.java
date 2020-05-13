@@ -59,21 +59,17 @@ public class AnimalsController {
         return modelAndView;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/animals/add")
     public String addAnimal(
-            @RequestParam("uploadingFiles") MultipartFile[] uploadingFiles,
-//            @RequestParam("file") MultipartFile multipartFile
             @RequestParam("name") String name,
-                            @RequestParam("descr") String descr,
-                            @RequestParam("status") String status,
+            @RequestParam("descr") String descr,
+            @RequestParam("status") String status,
+            @RequestParam("uploadingFiles") MultipartFile[] uploadingFiles,
                             @RequestParam("orgId") Long id
     ) {
-
-
-//
-//
         Organisation organisation = organisationService.find(id);
 //
+        System.out.println(organisation);
         AnimalStatus status1;
         if (status.equals("Ищет дом")) {
             status1 = AnimalStatus.HOMELESS;
@@ -100,10 +96,6 @@ public class AnimalsController {
         fileService.save(fileInfo);
         fileService.copyToStorage(multipartFile, newFilename);
         }
-
-//
-//
-
         return "redirect:/animals";
     }
 }

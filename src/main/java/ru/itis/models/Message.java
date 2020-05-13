@@ -28,6 +28,8 @@ public class Message implements Serializable {
 //    private String from_user;
 //    private String to_user;
 
+    private String fromLogin;
+
     @ManyToOne
     @JoinColumn(name = "dialog_id")
     private Dialog dialog;

@@ -1,53 +1,68 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title th:text="${o.name}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
     <script type="text/javascript" th:src="@{/js/cufon-yui.js}"></script>
     <script type="text/javascript" th:src="@{/js/droid_sans_400-droid_sans_700.font.js}"></script>
-    <script type="text/javascript" th:src="@{/js/jquery-1.4.2.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/script.js}"></script>
-    <script type="text/javascript" th:src="@{/js/coin-slider.min.js}"></script>
-    <script
-            src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
-    <script type="application/javascript">
+<!--        <script type="text/javascript" th:src="@{/js/jquery-1.4.2.min.js}"></script>-->
+<!--    <script type="text/javascript" th:src="@{/js/script.js}"></script>-->
+<!--    <script type="text/javascript" th:src="@{/js/coin-slider.min.js}"></script>-->
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script>
 
         function addPost(title, text) {
 
+
+            var token = "[[${_csrf.token}]]";
             let body = {
-                orgId : [[${o.id}]],
+                orgId: '[[${o.id}]]',
                 title: title,
                 text: text
             };
+            console.log(body);
+
             $.ajax({
                 url: "/new-post",
                 method: "POST",
                 data: JSON.stringify(body),
                 contentType: "application/json",
-                dataType: "json"
+                dataType: "json",
+                beforeSend: function (request) {
+                    return request.setRequestHeader('[[${_csrf.headerName}]]', token);
+                }
             });
-            // window.location.href='/organisations/' + [[${o.id}]]
 
         }
     </script>
 </head>
 <body>
+<header>
+    <div class="wrapper">
+        <!--        <a href="#"><img src="img/logo.png" class="logo" alt="" titl=""/></a>-->
+        <nav>
+            <ul>
+                <li><a th:href="@{/organisations}" th:text="#{header.organisations}"></a></li>
+                <li><a th:href="@{/animals}" th:text="#{header.animals}"></a></li>
+                <li><a href="#" th:text="#{header.information}"></a></li>
+            </ul>
+            <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
+            <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
+            <!--            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>-->
+            <!--            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>-->
+        </nav>
+    </div>
+</header>
+
 <div class="main">
     <div class="header">
         <div class="header_resize">
-            <div class="menu_nav">
-                <ul>
-                    <li class="active"><a href="index.html"><span>Home Page</span></a></li>
-                    <li><a href="support.html"><span>Support</span></a></li>
-                    <li><a href="about.html"><span>About Us</span></a></li>
-                    <li><a href="blog.html"><span>Blog</span></a></li>
-                    <li><a href="contact.html"><span>Contact Us</span></a></li>
-                </ul>
-            </div>
             <div class="logo">
                 <h1><a href="#"><span th:text="${o.name}"></span></a></h1>
             </div>
@@ -55,15 +70,17 @@
         <div class="clr"></div>
     </div>
 </div>
+
 <div class="content">
     <div class="content_resize">
         <div class="mainbar">
+            <div th:if="${posts.isEmpty()}" th:text="#{organisation.page.noPosts}"></div>
             <ul id="posts" th:each="post : ${posts}">
                 <li>
-                    <div class="article">
-                        <h2 th:text="${post.title}"><span></span></h2>
+                    <div class="article" style="background-color: whitesmoke">
+                        <h2 style="background-color: whitesmoke" th:text="${post.title}"><span></span></h2>
                         <p class="infopost">Posted on <span class="date" th:text="${post.date}"></span>
-                            <a href="#" class="com">Comments <span>(11)</span></a></p>
+                        </p>
                         <div class="post_content">
                             <p th:text="${post.text}"></p>
                             <p class="spec"><a href="#" class="rm">Read more</a></p>
@@ -75,57 +92,37 @@
 
             <div th:if="${user}==${o.moderator.login}">
                 <div id="dialog-form">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" id="title">
-                    <textarea name="text" id="text"></textarea>
-
-                    <button onclick="addPost($('#title').val(), $('#text').val())">Опубликовать</button>
+                    <div class="wrap-input100 validate-input m-b-20">
+                        <input class="input100" type="text" name="title" id="title" placeholder="Title">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-25">
+                        <textarea class="input100" style="margin: 0 2px 0 0; height: 200px" name="text" id="text" placeholder="Text"></textarea>
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn" onclick="addPost($('#title').val(), $('#text').val())">Опубликовать</button>
+                    </div>
 
                 </div>
             </div>
-            <!--            <p class="pages"><small>Page 1 of 2</small>-->
-            <!--                <span>1</span> <a href="#">2</a> <a href="#">&raquo;</a>-->
-            <!--            </p>-->
         </div>
         <div class="sidebar">
             <div class="clr"></div>
             <div class="gadget">
-                <h2 class="star"><span>Sidebar</span> Menu</h2>
+                <h2>Menu</h2>
                 <div class="clr"></div>
                 <ul class="sb_menu">
-                    <li><a th:href="@{/organisations/{id}/animals(id=${o.id})}">Наши питомцы</a></li>
-                    <li><a href="#">Новости</a></li>
-                    <li><a th:href="@{/messages(receiverId=${o.moderator.id})}">Написать модератору</a><br/></li>
-                    <li><a href="#about">О нас</a></li>
+                    <li><a th:href="@{/organisations/{id}/animals(id=${o.id})}" th:text="#{organisation.page.animals}">Наши питомцы</a></li>
+                    <li><a href="#"th:text="#{organisation.page.news}">Новости</a></li>
+                    <li><a th:href="@{/im(receiverId=${o.moderator.id})}" th:text="#{organisation.page.message}">Написать модератору</a><br/></li>
+                    <li><a href="#about" th:text="#{organisation.page.about}">О нас</a></li>
                     <div th:if="${user}==${o.moderator.login}">
-                        <li><a th:href="@{/animals/add(orgId=${o.id})}">Добавить питомца</a></li>
+                        <li><a th:href="@{/animals/add(orgId=${o.id})}" th:text="#{organisation.page.addPet}">Добавить питомца</a></li>
                     </div>
                 </ul>
             </div>
-            <div class="gadget">
-                <h2 class="star"><span>Топ</span> донатеры</h2>
-                <div class="clr"></div>
-                <ul class="ex_menu">
-                    <li><a href="#">Lorem ipsum dolor</a><br/>
-                        Donec libero. Suspendisse bibendum
-                    </li>
-                    <li><a href="#">Dui pede condimentum</a><br/>
-                        Phasellus suscipit, leo a pharetra
-                    </li>
-                    <li><a href="#">Condimentum lorem</a><br/>
-                        Tellus eleifend magna eget
-                    </li>
-                    <li><a href="#">Fringilla velit magna</a><br/>
-                        Curabitur vel urna in tristique
-                    </li>
-                    <li><a href="#">Suspendisse bibendum</a><br/>
-                        Cras id urna orbi tincidunt orci ac
-                    </li>
-                    <li><a href="#">Donec mattis</a><br/>
-                        purus nec placerat bibendum
-                    </li>
-                </ul>
-            </div>
+
         </div>
         <div class="clr"></div>
     </div>
@@ -133,21 +130,20 @@
 <div class="fbg">
     <div class="fbg_resize">
         <div class="col c1">
-            <h2><span>Ищите нас</span> в социальных сетях</h2>
+            <h2 th:text="#{organisation.page.smm}"></h2>
         </div>
         <div class="col c2">
-            <h2><span>Мы</span> на катре</h2>
+<!--            <h2><span>Мы</span> на катре</h2>-->
 
         </div>
         <div class="col c3" id="about">
-            <h2><span>Contact</span> Us</h2>
-            <p>Nullam quam lorem, tristique non vestibulum nec, consectetur in risus. Aliquam a quam vel leo gravida
-                gravida eu porttitor dui.</p>
-            <p class="contact_info"><span>Адрес:</span> <span th:text="${o.address}"></span> <br/>
-                <span>Телефон:</span><div th:text="${o.phoneNumber}"></div><br/>
-            <span>Написать модератору:</span><a th:href="@{/messages(receiverId=${o.moderator.id})}"
+            <h2 th:text="#{organisation.page.about}"></h2>
+            <p class="contact_info"><span th:text="#{organisation.page.address}"></span> <span th:text="${o.address}"></span> <br/>
+                <span th:text="#{organisation.page.phoneNumber}"></span>
+            <div th:text="${o.phoneNumber}"></div>
+            <br/>
+            <span th:text="#{organisation.page.message}"></span><a th:href="@{/im(receiverId=${o.moderator.id})}"
                                                 th:text="${o.moderator.login}"></a><br/>
-            <span>E-mail:</span> <a href="#">mail@yoursitename.com</a></p>
         </div>
         <div class="clr"></div>
     </div>
@@ -159,7 +155,6 @@
                 target="_blank" href="http://www.dreamtemplate.com/">DreamTemplate</a></p>
         <div style="clear:both;"></div>
     </div>
-</div>
 </div>
 </body>
 </html>

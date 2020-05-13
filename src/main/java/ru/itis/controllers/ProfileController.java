@@ -1,6 +1,7 @@
 package ru.itis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,9 +17,12 @@ public class ProfileController {
     @Autowired
     private UserService userService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/profile")
     public ModelAndView getProfilePage() {
         ModelAndView modelAndView = new ModelAndView();
+//        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
+//        System.out.println(context.getBean("springSessionRepositoryFilter"));
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String name = auth.getName();

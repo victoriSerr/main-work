@@ -30,6 +30,7 @@ public class MessageServiceImpl implements MessageService {
                 .text(messageDto.getText())
                 .date(new Date(new java.util.Date().getTime()))
                 .dialog(dialog)
+                .fromLogin(messageDto.getLogin())
                 .build();
 
         messageRepository.save(message);
@@ -41,11 +42,26 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Dialog find(Long id) {
-        Optional<Dialog> dialog = dialogsRepository.findOne(id);
-        if (dialog.isPresent()) {
+    public Dialog findOne(Long id) {
+        Optional<Dialog> dialog;
+        try {
+            dialog = dialogsRepository.findOne(id);
             return dialog.get();
+        } catch (Exception e) {
+            throw new AccessDeniedException("No messages");
         }
-        throw new AccessDeniedException("No messages");
+    }
+
+    @Override
+    public Dialog find(Long idFrom, Long idTo) {
+        Optional<Dialog> dialog;
+
+        try {
+            dialog = dialogsRepository.find(idFrom, idTo);
+            return dialog.get();
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 }

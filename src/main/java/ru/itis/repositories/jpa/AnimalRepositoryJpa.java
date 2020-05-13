@@ -28,7 +28,6 @@ public class AnimalRepositoryJpa implements AnimalRepository {
     public List<Animal> findAll() {
 //        Query query = entityManager.createNativeQuery("select * from animal", Animal.class);
         TypedQuery<Animal> query1 = entityManager.createQuery("select a from Animal a", Animal.class);
-
         return query1.getResultList();
     }
 

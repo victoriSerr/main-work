@@ -2,23 +2,24 @@ package ru.itis.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.itis.dto.OrganisationDto;
 import ru.itis.models.AppUser;
 import ru.itis.models.Organisation;
 import ru.itis.models.Post;
+import ru.itis.security.details.UserDetailsImpl;
 import ru.itis.services.OrganisationService;
 import ru.itis.services.PostService;
 import ru.itis.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -46,37 +47,25 @@ public class OrganisationController {
 
 //    @PreAuthorize("hasAuthority('MODERATOR')")
     @GetMapping(value = "/organisations/add")
-    public ModelAndView getFormPage() {
+    public ModelAndView getFormPage(@ModelAttribute(name = "form") OrganisationDto form) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("add-organisation");
+        modelAndView.addObject("form", form);
         return modelAndView;
     }
 
     @PostMapping(value = "/organisations/add")
-    public String addOrganisation(HttpServletRequest request) {
-//        ModelAndView modelAndView = new ModelAndView();
-
+    public String addOrganisation(@Valid @ModelAttribute(name = "form") OrganisationDto form, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors());
+//            model.addAttribute("form", form);
+            return "add-organisation";
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String moderatorName = auth.getName();
-
         AppUser user = userService.findUserByLogin(moderatorName);
-
-
-//        modelAndView.setViewName("organisations");
-
-        String name = request.getParameter("name");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("addr");
-        String description = request.getParameter("description");
-
-        OrganisationDto organisationDto = OrganisationDto.builder()
-                .name(name)
-                .phoneNumber(phone)
-                .address(address)
-                .description(description)
-                .moderator(user)
-                .build();
-        organisationService.save(organisationDto);
+        form.setModerator(user);
+        organisationService.save(form);
 
         return "redirect:/organisations";
     }

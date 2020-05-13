@@ -4,17 +4,12 @@
     <meta name="viewport"
           content="width=device-width, appUser-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
-    <script type="text/javascript" th:src="@{/js/main.js}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <title>Profile</title>
+    <title>Dialogs</title>
 </head>
-<script>
-
-</script>
 <body>
-
 <header>
     <div class="wrapper">
         <a href="#"><img src="img/logo.png" class="logo" alt="" titl=""/></a>
@@ -24,27 +19,17 @@
                 <li><a th:href="@{/animals}" th:text="#{header.animals}"></a></li>
                 <li><a href="#" th:text="#{header.information}"></a></li>
             </ul>
-            <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
             <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
             <!--            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>-->
             <!--            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>-->
         </nav>
     </div>
 </header>
-
-<h1 th:text="#{profile.page.welcome}"></h1>
-<h1 th:text="${user.id}"></h1>
-<h1 th:text="${user.login}"></h1>
-<h1 th:text="${user.email}"></h1>
-
-<a th:href="@{/messages}" th:text="#{profile.page.messages}"></a>
-
-<a th:href="@{/confirm/moder(id=${user.id})}" th:text="#{profile.page.register}"></a>
-
-<form method="post" action="/messages">
-    <input type="text" name="id">
-    <!--    <#&#45;&#45;        <input hidden="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">&ndash;&gt;-->
-    <input type="submit" value="create dialog">
-</form>
+<h1>dialogs</h1>
+<ul th:each="d : ${dialogs}">
+    <li>
+        <a th:href="@{/messages/{id}(id=${d.id})}">[[${d.userFrom.login}]] - [[${d.userTo.login}]]</a> <br>
+    </li>
+</ul>
 </body>
 </html>
