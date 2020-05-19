@@ -16,7 +16,7 @@ import ru.itis.services.UserService;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Aspect
+@Aspect
 @Component
 @Slf4j
 public class FileServiceAspect {
@@ -28,7 +28,7 @@ public class FileServiceAspect {
     @Autowired
     private MailService mailService;
 
-//    @Before(value = "execution(* ru.itis.services.FileService.save(..))")
+    @Before(value = "execution(* ru.itis.services.FileService.save(..))")
     public void before(JoinPoint joinPoint) {
         Map<String, String> model = new HashMap<>();
 

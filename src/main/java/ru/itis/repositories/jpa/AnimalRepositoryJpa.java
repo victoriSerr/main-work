@@ -20,7 +20,8 @@ public class AnimalRepositoryJpa implements AnimalRepository {
 
     @Override
     public Optional<Animal> findOne(Long aLong) {
-        return Optional.empty();
+        Animal animal = entityManager.find(Animal.class, aLong);
+        return Optional.ofNullable(animal);
     }
 
     @Override

@@ -12,7 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <style>
-    .error{
+    .error {
         color: red;
     }
 </style>
@@ -27,9 +27,13 @@
                 <li><a href="#" th:text="#{header.information}"></a></li>
             </ul>
             <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
-            <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
-<!--            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>-->
-<!--            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>-->
+            <div style="float: right" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
+            </div>
+            <div style="float: right" th:if="!${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
+                <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+            </div>
         </nav>
     </div>
 </header>
@@ -44,27 +48,28 @@
 
         <form th:action="@{/organisations/add}" method="post" th:object="${form}">
             <div class="wrap-input100 validate-input m-b-20">
-<!--                <input class="input100" type="text" name="name" id="name" placeholder="Название организации">-->
+                <!--                <input class="input100" type="text" name="name" id="name" placeholder="Название организации">-->
                 <input class="input100" type="text" th:field="*{name}" placeholder="Название организации">
                 <span class="focus-input100"></span>
             </div>
             <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
             <div class="wrap-input100 validate-input m-b-20">
-<!--                <input class="input100" type="text" name="phoneNumber" id="phoneNumber" placeholder="Номер телефона">-->
+                <!--                <input class="input100" type="text" name="phoneNumber" id="phoneNumber" placeholder="Номер телефона">-->
                 <input class="input100" type="text" th:field="*{phoneNumber}" placeholder="Номер телефона">
                 <span class="focus-input100"></span>
             </div>
             <span class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
             <div class="wrap-input100 validate-input m-b-20">
-<!--                <input class="input100" type="text" name="address" id="address" placeholder="Адрес">-->
+                <!--                <input class="input100" type="text" name="address" id="address" placeholder="Адрес">-->
                 <input class="input100" type="text" th:field="*{address}" placeholder="Адрес">
                 <span class="focus-input100"></span>
             </div>
             <span class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
 
             <div class="wrap-input100 validate-input m-b-25">
-                <textarea class="input100" type="text" name="description" id="description" placeholder="Описание"></textarea>
+                <textarea class="input100" type="text" name="description" id="description"
+                          placeholder="Описание"></textarea>
                 <span class="focus-input100"></span>
             </div>
 

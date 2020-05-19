@@ -4,6 +4,7 @@ package ru.itis.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.File;
 import java.io.Serializable;
 
 @Getter
@@ -26,7 +27,15 @@ public class FileInfo implements Serializable {
     private String suffix;
     private String storageUrl;
 
+    @Transient
+    private File sourсeFile;
+
     @ManyToOne(targetEntity = Animal.class)
     @JoinColumn(name = "animal_id")
     private Animal animalA;
+
+    @PostLoad
+    public void loadFile() {
+        sourсeFile = new File(storageUrl);
+    }
 }

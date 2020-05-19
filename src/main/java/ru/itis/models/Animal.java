@@ -19,7 +19,6 @@ public class Animal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    private Long organisation_id;
     private String name;
     private String description;
 
@@ -40,6 +39,7 @@ public class Animal implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", status=" + status +
                 ", organisation=" + organisation.getName() +
                 '}';
     }

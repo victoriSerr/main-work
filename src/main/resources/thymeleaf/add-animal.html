@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add</title>
+    <title>Add Pet</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
@@ -44,9 +44,14 @@
                 <li><a href="#" th:text="#{header.information}"></a></li>
             </ul>
             <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
-            <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
-<!--            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>-->
-<!--            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>-->
+            <div style="float: right" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
+            </div>
+            <div style="float: right" th:if="!${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
+                <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+            </div>
+
         </nav>
     </div>
 </header>
@@ -57,7 +62,7 @@
 					Новый зверь
 				</span>
 
-        <form th:action="@{/animals/add}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/animals/add}" method="post" enctype="multipart/form-data" charset="UTF-8">
             <div class="wrap-input100 validate-input m-b-20">
                 <input class="input100" type="text" name="name" id="name" placeholder="Кличка">
                 <span class="focus-input100"></span>

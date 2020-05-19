@@ -36,7 +36,7 @@ public class SignUpController {
 
         userService.signUp(signUpDto);
 
-        modelAndView.setViewName("sign_up");
+        modelAndView.setViewName("redirect:/signIn");
         return modelAndView;
     }
 }

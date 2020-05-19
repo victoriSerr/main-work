@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Animal Detail</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/util1.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main1.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/animsition.min.js}"></script>
+    <script th:src="@{/js/main1.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+</head>
+<body class="animsition">
+<header>
+    <div class="wrapper">
+        <a href="#"><img src="img/logo.png" class="logo" alt="" titl=""/></a>
+        <nav>
+            <ul>
+                <li><a th:href="@{/organisations}" th:text="#{header.organisations}"></a></li>
+                <li><a th:href="@{/animals}" th:text="#{header.animals}"></a></li>
+                <li><a href="#" th:text="#{header.information}"></a></li>
+            </ul>
+            <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
+            <div style="float: right" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
+            </div>
+            <div style="float: right" th:if="!${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
+                <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+
+<!-- Product Detail -->
+<div class="container bgwhite p-t-35 p-b-80">
+    <div class="flex-w flex-sb">
+        <div class="w-size13 p-t-30 respon5">
+            <div class="wrap-slick3 flex-sb flex-w">
+
+                <div class="slick3">
+                    <div class="item-slick3" data-thumb="images/thumb-item-01.jpg">
+                        <div class="wrap-pic-w">
+                            <img th:src="@{/images/{img}(img=${animal.files.get(0).nameInStorage})}" alt="IMG-PRODUCT">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="w-size14 p-t-30 respon5">
+            <form method="post" th:action="@{/animals/{id}/edit(id=${animal.id})}">
+                <h4 class="product-detail-name m-text16 p-b-13">
+                    <input type="text" name="name" th:value="${animal.name}">
+                </h4>
+
+                <p class="s-text8 p-t-10" >
+                    <select name="status" class="input100" id="status" style="border: none">
+                        <option selected="selected" hidden="">Статус</option>
+                        <option>Ищет дом</option>
+                        <option>На передержке</option>
+                        <option>Все плохо</option>
+                    </select>
+                </p>
+
+                <div class="wrap-dropdown-content bo6 p-t-15 p-b-14 active-dropdown-content">
+                    <h5 class="js-toggle-dropdown-content flex-sb-m cs-pointer m-text19 color0-hov trans-0-4">
+                        Description
+                        <i class="down-mark fs-12 color1 fa fa-minus" aria-hidden="true"></i>
+                        <i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
+                    </h5>
+
+                    <div class="dropdown-content p-t-15 p-b-23">
+                        <textarea class="s-text8" name="descr" th:text="${animal.description}"></textarea>
+                    </div>
+                </div>
+
+                <div class="wrap-dropdown-content bo7 p-t-15 p-b-14">
+                    <h5 class="js-toggle-dropdown-content flex-sb-m cs-pointer m-text19 color0-hov trans-0-4">
+                        Organisation
+                        <i class="down-mark fs-12 color1 fa fa-minus" aria-hidden="true"></i>
+                        <i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
+                    </h5>
+
+                    <div class="dropdown-content p-t-15 p-b-23">
+                        <a class="s-text8" th:href="@{/organisations/{id}(id=${animal.organisation.id})}"
+                           th:text="${animal.organisation.name}">
+                        </a>
+                    </div>
+                </div>
+                <div class="container-login100-form-btn">
+                    <input type="submit" class="login100-form-btn" placeholder="send">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

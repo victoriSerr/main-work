@@ -25,10 +25,7 @@ public class UserRepositoryJpa implements ru.itis.repositories.UserRepository {
     @Transactional
     public Optional<AppUser> findByLogin(String login) {
         TypedQuery<AppUser> query =
-                entityManager.createQuery("select distinct u from AppUser u where u.login = :login", AppUser.class);
-
-//        left join fetch u.dialogs left join fetch u.dialogs1
-//        System.out.println(query);
+                entityManager.createQuery("select u from AppUser u where u.login = :login", AppUser.class);
         query.setParameter("login", login);
         AppUser user = query.getSingleResult();
         user.setDialogs(dialogsRepository.find(user.getId()));

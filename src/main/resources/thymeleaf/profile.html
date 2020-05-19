@@ -25,9 +25,13 @@
                 <li><a href="#" th:text="#{header.information}"></a></li>
             </ul>
             <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
-            <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
-            <!--            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>-->
-            <!--            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>-->
+            <div style="float: right" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
+            </div>
+            <div style="float: right" th:if="!${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
+                <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+            </div>
         </nav>
     </div>
 </header>
@@ -37,14 +41,9 @@
 <h1 th:text="${user.login}"></h1>
 <h1 th:text="${user.email}"></h1>
 
-<a th:href="@{/messages}" th:text="#{profile.page.messages}"></a>
+<a th:href="@{/messages}" th:text="#{profile.page.messages}"></a> <br>
 
 <a th:href="@{/confirm/moder(id=${user.id})}" th:text="#{profile.page.register}"></a>
 
-<form method="post" action="/messages">
-    <input type="text" name="id">
-    <!--    <#&#45;&#45;        <input hidden="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">&ndash;&gt;-->
-    <input type="submit" value="create dialog">
-</form>
 </body>
 </html>

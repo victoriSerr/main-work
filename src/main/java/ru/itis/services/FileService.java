@@ -48,7 +48,7 @@ public class FileService {
     }
 
     public String getUrlOfFile(String storageName) {
-        return storagePath + "/" + storageName;
+        return storagePath + "\\" + storageName;
     }
 
 

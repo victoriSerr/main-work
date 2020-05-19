@@ -22,7 +22,7 @@ public class OrganisationRepositoryJpa implements OrganisationRepository {
     @Transactional
     public Optional<Organisation> findOne(Long aLong) {
         Organisation o1 = entityManager.find(Organisation.class, aLong);
-        return Optional.of(o1);
+        return Optional.ofNullable(o1);
     }
 
     @Override

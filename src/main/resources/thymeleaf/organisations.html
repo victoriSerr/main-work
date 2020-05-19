@@ -20,13 +20,18 @@
                 <li><a href="#" th:text="#{header.information}"></a></li>
             </ul>
             <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
-            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
-            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+            <div style="float: right" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
+            </div>
+            <div style="float: right" th:if="!${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
+                <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+            </div>
         </nav>
     </div>
 </header>
-<ul th:each="o : ${organisations}">
-    <li>
+<ul>
+    <li th:each="o : ${organisations}">
         <a th:href="@{/organisations/{id}(id=${o.id})}">
             <h1>ID - [[${o.id}]]</h1>
             <h1>Name - [[${o.name}]]</h1>

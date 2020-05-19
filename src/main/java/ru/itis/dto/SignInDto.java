@@ -9,10 +9,8 @@ import javax.validation.constraints.Size;
 @Data
 @Builder
 public class SignInDto {
-//    @NotNull
-//    @Size(min = 1)
+
     private String login;
-//    @NotNull
-//    @Size(min = 3)
+
     private String password;
 }

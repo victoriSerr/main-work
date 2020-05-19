@@ -17,3 +17,10 @@ GET http://localhost:8080/api/animals
 Content-Type: application/json
 
 ###
+
+GET http://localhost:8080/api/animals
+Content-Type: application/json
+
+{
+  "token": "2KzCI1sBaK"
+}

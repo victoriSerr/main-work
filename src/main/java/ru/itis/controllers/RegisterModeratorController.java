@@ -2,6 +2,7 @@ package ru.itis.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import ru.itis.models.Role;
 import ru.itis.services.UserService;
 
 @Controller
+@PreAuthorize("isAuthenticated()")
 public class RegisterModeratorController {
 
     @Autowired

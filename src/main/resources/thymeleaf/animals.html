@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Animals</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="author" content="pixelhint.com">
     <meta name="description" content="La casa free real state fully responsive html5/css3 home page website template"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/>
@@ -24,8 +25,13 @@
                 <li><a href="#" th:text="#{header.information}"></a></li>
             </ul>
             <a onclick="changeLanguage()" href="" class="login_btn" id="lang" th:text="#{header.lang}"></a>
-            <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
-            <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+            <div style="float: right" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/profile}" class="login_btn" th:text="#{header.profile}"></a>
+            </div>
+            <div style="float: right" th:if="!${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/registration}" class="login_btn" th:text="#{header.signUp}"></a>
+                <a th:href="@{/signIn}" class="login_btn" th:text="#{header.login}"></a>
+            </div>
         </nav>
     </div>
 </header>
@@ -34,13 +40,13 @@
     <div class="wrapper">
         <ul class="properties_list" >
             <li th:each="animal : ${animals}">
-                <a href="#">
-                    <img  th:attr="src=@{/images/{name}(name=${animal.files.get(0).nameInStorage})}" alt="" title="" class="property_img"/>
+                <a th:href="@{/animals/{id}(id=${animal.id})}">
+                    <img th:attr="src=@{/images/{name}(name=${animal.files.get(0).nameInStorage})}" alt="" title="" class="property_img"/>
                 </a>
                 <span class="price" th:text="${animal.status}"></span>
                 <div class="property_details">
                     <h1>
-                        <a href="#" th:text="${animal.name}"></a>
+                        <a th:href="@{/animals/{id}(id=${animal.id})}" th:text="${animal.name}"></a>
                     </h1>
                 </div>
             </li>

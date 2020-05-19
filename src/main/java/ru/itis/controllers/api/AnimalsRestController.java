@@ -15,14 +15,13 @@ import java.util.List;
 @PreAuthorize("permitAll()")
 public class AnimalsRestController {
 
-
     @Autowired
     private AnimalService animalService;
 
     @GetMapping("/api/animals")
-    public ResponseEntity<List<Animal>> getAllAnimals() {
-
+    public List<Animal> getAllAnimals() {
+        System.out.println("rest");
         List<Animal> animals = animalService.findAll();
-        return ResponseEntity.ok(animals);
+        return animals;
     }
 }

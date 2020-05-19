@@ -2,6 +2,7 @@ package ru.itis.models;
 
 
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,6 +30,14 @@ public class Organisation implements Serializable {
 //
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "organisation")
     private List<Animal> animals;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "organisation")
+    @Where(clause = "status = 'IN_HOME'")
+    private List<Animal> animalsInHome;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "organisation")
+    @Where(clause = "status = 'HOMELESS'")
+    private List<Animal> animalsNeedHome;
 
     @ManyToOne
     @JoinColumn(name = "moderator_id")

@@ -45,7 +45,6 @@ import java.util.Properties;
 @ComponentScan(basePackages = "ru.itis")
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-//@EnableJdbcHttpSession
 public class RootConfig {
 
 
@@ -66,9 +65,6 @@ public class RootConfig {
         config.setDriverClassName(environment.getProperty("db.driver"));
         return config;
     }
-
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

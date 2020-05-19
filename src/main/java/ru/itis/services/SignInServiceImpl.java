@@ -1,6 +1,7 @@
 package ru.itis.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.itis.dto.SignInDto;
@@ -27,8 +28,8 @@ public class SignInServiceImpl implements SignInService {
             AppUser appUser = userCandidate.get();
             if (encoder.matches(signInDto.getPassword(), appUser.getHashPassword())) {
                 return appUser;
-            } else return null;
-        } else return null;
+            } else throw new AccessDeniedException("Wrong login or password");
+        } else throw new AccessDeniedException("User not found");
 
     }
 }

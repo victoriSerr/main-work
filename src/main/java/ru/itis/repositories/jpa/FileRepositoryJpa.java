@@ -8,6 +8,7 @@ import ru.itis.repositories.FileRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +20,9 @@ public class FileRepositoryJpa implements FileRepository {
 
     @Override
     public Optional<FileInfo> findFile(String nameInStorage) {
-        Query query = entityManager.createNativeQuery("select * from file where nameinstorage = ?1", FileInfo.class).setParameter(1, nameInStorage);
-        FileInfo fileInfo = (FileInfo) query.getSingleResult();
+        TypedQuery<FileInfo> query = entityManager.createQuery("select f from FileInfo f where f.nameInStorage = :name", FileInfo.class);
+        query.setParameter("name", nameInStorage);
+        FileInfo fileInfo = query.getSingleResult();
         return Optional.ofNullable(fileInfo);
     }
 

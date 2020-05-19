@@ -1,6 +1,7 @@
 package ru.itis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Controller
+@PreAuthorize("isAuthenticated()")
 public class DialogsController {
 
     @Autowired
@@ -51,11 +53,19 @@ public class DialogsController {
 
     @GetMapping(value = "/messages/{dialog-id:.+}")
     public ModelAndView getChatPage(@PathVariable("dialog-id") Long dialogId) {
-        System.out.println("sssssssssssssssssss");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView modelAndView = new ModelAndView();
 
         Dialog dialog = messageService.findOne(dialogId);
+
+        if (!dialog.getUserFrom().getLogin().equals(auth.getName()) && !dialog.getUserTo().getLogin().equals(auth.getName())) {
+            System.out.println(dialog.getUserFrom().getLogin());
+            System.out.println(dialog.getUserTo().getLogin());
+            System.out.println(auth.getName());
+            modelAndView.setViewName("redirect:/profile");
+        } else {
+            modelAndView.setViewName("chat");
+        }
         List<MessageDto> messages = new ArrayList<>();
 
         for (Message m : dialog.getMessages()) {
@@ -70,7 +80,6 @@ public class DialogsController {
 
         modelAndView.addObject("dialogId", dialogId);
         modelAndView.addObject("login", auth.getName());
-        modelAndView.setViewName("chat");
         return modelAndView;
     }
 
@@ -83,7 +92,7 @@ public class DialogsController {
         System.out.println(userTo);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AppUser userFrom = userService.findUserByLogin(auth.getName());
-        if(userTo.getId().equals(userFrom.getId())) {
+        if (userTo.getId().equals(userFrom.getId())) {
             return "redirect:/profile";
         }
         Dialog dialog = messageService.find(userFrom.getId(), userTo.getId());

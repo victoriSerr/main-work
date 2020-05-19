@@ -39,6 +39,8 @@ public class OrganisationController {
         List<Organisation> list = organisationService.findAll();
         ModelAndView modelAndView = new ModelAndView();
 
+        System.out.println(list.get(0).getAnimalsInHome());
+        System.out.println(list.get(0).getAnimalsNeedHome());
         modelAndView.addObject("organisations", list);
         modelAndView.setViewName("organisations");
 
@@ -57,8 +59,6 @@ public class OrganisationController {
     @PostMapping(value = "/organisations/add")
     public String addOrganisation(@Valid @ModelAttribute(name = "form") OrganisationDto form, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getAllErrors());
-//            model.addAttribute("form", form);
             return "add-organisation";
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -85,8 +85,4 @@ public class OrganisationController {
         modelAndView.setViewName("organisation");
         return modelAndView;
     }
-//    @GetMapping(value = "/organisations/{orgId:.+}")
-//    public String getOrganisationPage(@PathVariable("orgId") Long id) {
-//        return "organisation";
-//    }
 }
