@@ -166,7 +166,7 @@ public class RootConfig {
         return properties;
     }
 
-    @Bean
+//    @Bean
     public DataSource dataSourceHeroku() throws URISyntaxException {
         URI dbUri = new URI(System.getenv("postgres://keoqyigjsxdkyt:40acb54dcd78b6689a104e9a93265b7c44c9e8c74ca28345aaed274fc800cbc0@ec2-46-137-177-160.eu-west-1.compute.amazonaws.com:5432/dqsligtpd5iiu"));
 
