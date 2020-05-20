@@ -12,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -38,6 +39,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 @Configuration
@@ -163,6 +166,21 @@ public class RootConfig {
         return properties;
     }
 
+    @Bean
+    public DataSource dataSourceHeroku() throws URISyntaxException {
+        URI dbUri = new URI(System.getenv("postgres://keoqyigjsxdkyt:40acb54dcd78b6689a104e9a93265b7c44c9e8c74ca28345aaed274fc800cbc0@ec2-46-137-177-160.eu-west-1.compute.amazonaws.com:5432/dqsligtpd5iiu"));
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+        DriverManagerDataSource basicDataSource = new DriverManagerDataSource();
+        basicDataSource.setUrl(dbUrl);
+        basicDataSource.setUsername(username);
+        basicDataSource.setPassword(password);
+
+        return basicDataSource;
+    }
 
 
 
