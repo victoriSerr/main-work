@@ -7,6 +7,7 @@ import ru.itis.models.AppUser;
 import ru.itis.repositories.DialogsRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -24,12 +25,17 @@ public class UserRepositoryJpa implements ru.itis.repositories.UserRepository {
     @Override
     @Transactional
     public Optional<AppUser> findByLogin(String login) {
-        TypedQuery<AppUser> query =
-                entityManager.createQuery("select u from AppUser u where u.login = :login", AppUser.class);
-        query.setParameter("login", login);
-        AppUser user = query.getSingleResult();
-        user.setDialogs(dialogsRepository.find(user.getId()));
-        return Optional.ofNullable(user);
+        try {
+
+            TypedQuery<AppUser> query =
+                    entityManager.createQuery("select u from AppUser u where u.login = :login", AppUser.class);
+            query.setParameter("login", login);
+            AppUser user = query.getSingleResult();
+            user.setDialogs(dialogsRepository.find(user.getId()));
+            return Optional.of(user);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
