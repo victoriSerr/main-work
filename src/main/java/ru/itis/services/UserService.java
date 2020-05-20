@@ -42,6 +42,11 @@ public class UserService {
         String rawPassword = form.getPassword();
         String hashPassword = encoder.encode(rawPassword);
 
+        Optional<AppUser> user = userRepository.findByLogin(form.getLogin());
+
+        if (user.isPresent()) {
+            throw new AccessDeniedException("User with this login is present");
+        }
 
         AppUser appUser = AppUser.builder()
                 .email(form.getEmail())
@@ -51,7 +56,8 @@ public class UserService {
                 .role(Role.USER)
                 .build();
 
-        String link = "http://localhost:8080/confirmation/" + encoder.encode(Integer.toString(appUser.hashCode())).replace("/", "");
+//        String link = "http://localhost:8080/confirmation/" + encoder.encode(Integer.toString(appUser.hashCode())).replace("/", "");
+        String link = "hhttps://find-homeee.herokuapp.com/" + encoder.encode(Integer.toString(appUser.hashCode())).replace("/", "");
         appUser.setLink(link);
 
         userRepository.save(appUser);

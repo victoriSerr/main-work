@@ -39,8 +39,8 @@ public class OrganisationController {
         List<Organisation> list = organisationService.findAll();
         ModelAndView modelAndView = new ModelAndView();
 
-        System.out.println(list.get(0).getAnimalsInHome());
-        System.out.println(list.get(0).getAnimalsNeedHome());
+//        System.out.println(list.get(0).getAnimalsInHome());
+//        System.out.println(list.get(0).getAnimalsNeedHome());
         modelAndView.addObject("organisations", list);
         modelAndView.setViewName("organisations");
 
