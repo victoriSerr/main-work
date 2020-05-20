@@ -22,6 +22,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
         webSocketHandlerRegistry.addHandler(handler, "/chat")
                 .setHandshakeHandler(handshakeHandler)
+                .setAllowedOrigins("*")
                 .withSockJS();
     }
 }
