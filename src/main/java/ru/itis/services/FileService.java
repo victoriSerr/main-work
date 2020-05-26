@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import ru.itis.dto.InformationDto;
 import ru.itis.models.FileInfo;
 import ru.itis.repositories.FileRepository;
+import ru.itis.repositories.jpaRepo.FileInfoJpaRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,6 +20,10 @@ public class FileService {
 
     @Autowired
     private FileRepository fileRepository;
+
+
+    @Autowired
+    private FileInfoJpaRepository fileInfoJpaRepository;
 
     @Autowired
     @Qualifier("directory")
@@ -51,5 +57,10 @@ public class FileService {
         return storagePath + "\\" + storageName;
     }
 
+
+    public InformationDto getInformation(Long id) {
+        return fileInfoJpaRepository.getFileInfo(id);
+
+    }
 
 }

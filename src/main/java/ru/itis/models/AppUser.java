@@ -59,12 +59,5 @@ public class AppUser implements Serializable {
                 '}';
     }
 
-
-//    @Transient
-//    @Builder.Default
-//    private Map<String, List<Message>> messages = new HashMap<>();
-
-
-
 }
 

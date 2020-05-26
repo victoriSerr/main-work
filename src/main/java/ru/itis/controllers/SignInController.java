@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class SignInController {
+
     @PreAuthorize("permitAll()")
     @GetMapping(value = "/signIn")
     public ModelAndView getSignInPage(Authentication authentication) {
@@ -20,5 +21,4 @@ public class SignInController {
         }
         return modelAndView;
     }
-
 }
